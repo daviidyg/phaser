@@ -213,6 +213,7 @@ playGame.prototype = {
         // music
         music = game.add.audio('music');
         music.loop = true;
+        music.volume =0.2;
         music.play()
 	},
 	
