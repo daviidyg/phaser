@@ -21,6 +21,8 @@ var hitBox;
 var hurtFlag;
 var audioHurt;
 var music;
+var vidas = 6;
+var minicio;
 
 
 window.onload = function () {
@@ -81,7 +83,8 @@ preload.prototype = {
 	    game.load.audio('kill', ['assets/sounds/kill.ogg']);
 		game.load.audio('rise', ['assets/sounds/rise.ogg']);
 		game.load.audio('hurt', ['assets/sounds/hurt.ogg']);
-		game.load.audio('jump', ['assets/sounds/jump.ogg']);
+        game.load.audio('jump', ['assets/sounds/jump.ogg']);
+        game.load.audio('minicio',['assets/sounds/Ruined_loop.ogg'])
     },
     create: function () {
         //this.game.state.start('PlayGame');
@@ -110,7 +113,10 @@ titleScreen.prototype = {
 
         var startKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
         startKey.onDown.add(this.startGame, this);
-
+        minicio = game.add.audio('minicio');
+        minicio.volume = 0.7;
+        minicio.loop = true;
+        minicio.play()
         this.state = 1;
     },
 
@@ -177,6 +183,7 @@ gameOver.prototype = {
             this.title2 = game.add.image(game.width / 2, 40, 'instructions');
             this.title2.anchor.setTo(0.5, 0);
             this.title.destroy();
+            
         } else {
             this.game.state.start('PlayGame');
         }
@@ -188,7 +195,7 @@ var playGame = function (game) {
 playGame.prototype = {
 
     create: function () {
-       
+        minicio.stop();
 		this.createBackgrounds();
 		this.createTileMap();
         this.populate();
@@ -213,7 +220,7 @@ playGame.prototype = {
         // music
         music = game.add.audio('music');
         music.loop = true;
-        music.volume =0.2;
+        music.volume =0.7;
         music.play()
 	},
 	
@@ -234,7 +241,12 @@ playGame.prototype = {
 		
 		// skeletons
 		this.addSkeletonSpawner(17,12, true);
-		this.addSkeletonSpawner(10,12, false);
+        this.addSkeletonSpawner(10,12, false);
+        this.addSkeletonSpawner(11,12, true);
+        this.addSkeletonSpawner(12,12, true);
+        this.addSkeletonSpawner(14,12, true);
+        this.addSkeletonSpawner(16,20, false);
+        this.addSkeletonSpawner(10,12, false);
 		this.addSkeletonSpawner(80,12, false);
 		this.addSkeletonSpawner(147,12, false);
 		this.addSkeletonSpawner(162,12, true);
@@ -391,13 +403,17 @@ playGame.prototype = {
             game.physics.arcade.overlap(hitbox, enemies_group, this.triggerAttack, null, this);
 			game.physics.arcade.overlap(player, enemies_group, this.hurtPlayer, null, this);
         }
+        else{
+            console.log(player.health)
+            this.game.state.start('GameOver');
+        }
 		
 		this.movePlayer();
 		this.hurtFlagManager();
 		
 		// if end is reached display game over screen
 		if(player.position.x >  295 * 16 ){
-				this.game.state.start('GameOver');
+            this.game.state.start('GameOver');
 		}
 		
 		
@@ -420,6 +436,7 @@ playGame.prototype = {
         hurtFlag = true;
         player.animations.play('hurt');
         player.body.velocity.y = -150;
+        player.damage(1);
         player.body.velocity.x = (player.scale.x == 1) ? -100 : 100;
 		audioHurt.play();
     },
@@ -536,7 +553,8 @@ Player = function(game, x, y){
 	y *= 16;
 	this.initX = x;
 	this.initY = y;
-	Phaser.Sprite.call(this, game, x, y, "atlas", "hero-idle-1");
+    Phaser.Sprite.call(this, game, x, y, "atlas", "hero-idle-1");
+    this.health = vidas;
 	this.anchor.setTo(0.5);	
 	game.physics.arcade.enable(this);
 	this.body.setSize(22, 39, 41, 19);
