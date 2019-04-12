@@ -23,7 +23,12 @@ var audioHurt;
 var music;
 var vidas = 6;
 var minicio;
-
+var mfinal;
+var livescounter;
+var livesicon;
+var livescrop;
+var vidas1;
+var vidas2;
 
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
@@ -69,7 +74,8 @@ preload.prototype = {
         // environment
         game.load.image('bg-moon', 'assets/environment/bg-moon.png');
         game.load.image("bg-mountains", 'assets/environment/bg-mountains.png');
-		game.load.image("bg-graveyard", 'assets/environment/bg-graveyard.png');
+        game.load.image("bg-graveyard", 'assets/environment/bg-graveyard.png');
+        game.load.image('vidas','assets/heart.png')
         // tileset
         game.load.image('tileset', 'assets/environment/tileset.png');
         game.load.tilemap('map', 'assets/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
@@ -84,7 +90,9 @@ preload.prototype = {
 		game.load.audio('rise', ['assets/sounds/rise.ogg']);
 		game.load.audio('hurt', ['assets/sounds/hurt.ogg']);
         game.load.audio('jump', ['assets/sounds/jump.ogg']);
-        game.load.audio('minicio',['assets/sounds/Ruined_loop.ogg'])
+        game.load.audio('minicio',['assets/sounds/Ruined_loop.ogg']);
+        game.load.audio('mfinal',['assets/sounds/Horror-MusicBox_loop.ogg']);
+        
     },
     create: function () {
         //this.game.state.start('PlayGame');
@@ -147,11 +155,9 @@ var gameOver = function (game) {
 gameOver.prototype = {
     create: function () {
 		music.stop();
-		
         bg_moon = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-moon');
-		bg_mountains = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-mountains');
-	 
-
+        bg_mountains = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-mountains');
+        
         this.title = game.add.image(gameWidth / 2, 100 , 'game-over');
         this.title.anchor.setTo(0.5);
         var credits = game.add.image(gameWidth / 2, game.height - 12, 'credits');
@@ -165,6 +171,10 @@ gameOver.prototype = {
         startKey.onDown.add(this.startGame, this);
 
         this.state = 2;
+        mfinal = game.add.audio('mfinal');
+        mfinal.volume = 0.7;
+        mfinal.loop = true;
+        mfinal.play()
     },
 
     blinkText: function () {
@@ -183,6 +193,7 @@ gameOver.prototype = {
             this.title2 = game.add.image(game.width / 2, 40, 'instructions');
             this.title2.anchor.setTo(0.5, 0);
             this.title.destroy();
+           
             
         } else {
             this.game.state.start('PlayGame');
@@ -300,7 +311,7 @@ playGame.prototype = {
 	
     bindKeys: function () {
         this.wasd = {
-            jump: game.input.keyboard.addKey(Phaser.Keyboard.C),
+            jump: game.input.keyboard.addKey(Phaser.Keyboard.UP),
 			jump2: game.input.keyboard.addKey(Phaser.Keyboard.K),
 			attack: game.input.keyboard.addKey(Phaser.Keyboard.X),
             left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
@@ -319,6 +330,12 @@ playGame.prototype = {
 	
     createPlayer: function (x, y) {
         var temp = new Player(game, x, y);
+        livescounter = game.add.image(20, 10, 'vidas');
+        vidas1 = game.add.image(40, 10, 'vidas');
+        vidas2 = game.add.image(60, 10, 'vidas');
+        livescounter.fixedToCamera = true;
+        vidas1.fixedToCamera = true;
+        vidas2.fixedToCamera = true;
         game.add.existing(temp);
     },
 
