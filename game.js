@@ -461,7 +461,9 @@ playGame.prototype = {
     hurtFlagManager: function () {
         // reset hurt when touching ground
         if (hurtFlag && player.body.onFloor()) {
+            player.damage(1);
             hurtFlag = false;
+
         }
     },
 	
