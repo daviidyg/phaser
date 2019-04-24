@@ -21,7 +21,7 @@ var hitBox;
 var hurtFlag;
 var audioHurt;
 var music;
-var vidas = 6;
+var vidas = 3;
 var minicio;
 var mfinal;
 var livescounter;
@@ -29,6 +29,8 @@ var livesicon;
 var livescrop;
 var vidas1;
 var vidas2;
+var contador = 0;
+var pegado=false
 
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
@@ -193,14 +195,20 @@ gameOver.prototype = {
             this.title2 = game.add.image(game.width / 2, 40, 'instructions');
             this.title2.anchor.setTo(0.5, 0);
             this.title.destroy();
+            
            
             
         } else {
             this.game.state.start('PlayGame');
+            mfinal.stop()
+
         }
     }
 }
-
+function inven(){
+    var pegado=false;
+    var hurtFlag=false;
+}
 var playGame = function (game) {
 };
 playGame.prototype = {
@@ -425,9 +433,7 @@ playGame.prototype = {
             this.game.state.start('GameOver');
         }
 		
-		this.movePlayer();
-		this.hurtFlagManager();
-		
+		this.movePlayer();		
 		// if end is reached display game over screen
 		if(player.position.x >  295 * 16 ){
             this.game.state.start('GameOver');
@@ -439,33 +445,33 @@ playGame.prototype = {
 
     },
 	
-    hurtFlagManager: function () {
-        // reset hurt when touching ground
-        if (hurtFlag && player.body.onFloor()) {
-            hurtFlag = false;
-        }
-    },
+    
 	
     hurtPlayer: function () {
         if (hurtFlag) {
             return;
         }
+        if(!pegado){
+        pegado=true;
         hurtFlag = true;
         player.animations.play('hurt');
         player.body.velocity.y = -150;
+        contador++;
+        console.log(contador)
         player.damage(1);
         player.body.velocity.x = (player.scale.x == 1) ? -100 : 100;
-		audioHurt.play();
+        audioHurt.play();
+        setTimeout(this.hurtFlagManager,1000)
+    }
     },
-	
+    
     hurtFlagManager: function () {
         // reset hurt when touching ground
-        if (hurtFlag && player.body.onFloor()) {
-            player.damage(1);
             hurtFlag = false;
-
-        }
+            pegado = false
+        
     },
+	
 	
    
     triggerAttack: function (player, enemy) {
