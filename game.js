@@ -201,6 +201,8 @@ gameOver.prototype = {
         } else {
             this.game.state.start('PlayGame');
             mfinal.stop()
+            vidas=3;
+            contador=0;
 
         }
     }
@@ -457,12 +459,23 @@ playGame.prototype = {
         player.animations.play('hurt');
         player.body.velocity.y = -150;
         contador++;
+        vidas--;
         console.log(contador)
         player.damage(1);
         player.body.velocity.x = (player.scale.x == 1) ? -100 : 100;
         audioHurt.play();
+        console.log(vidas)
         setTimeout(this.hurtFlagManager,1000)
     }
+        if(vidas==2){
+            vidas2.destroy();
+        }
+        else if(vidas==1){
+            vidas1.destroy();
+        }
+        else{
+            livescounter.destroy()
+        }
     },
     
     hurtFlagManager: function () {
@@ -606,8 +619,7 @@ Player.prototype.update = function () {
 	// kill player if is at spikes level
 	if(this.position.y > 172){
 		audioHurt.play();
-		this.position.x = this.initX;
-		this.position.y = this.initY;
+		this.game.state.start('GameOver');
 	}
 	//console.log(this.position.y);
 	
