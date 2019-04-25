@@ -22,6 +22,8 @@ var hurtFlag;
 var audioHurt;
 var music;
 var vidas = 3;
+var muerte = false;
+var highscore=0;
 var minicio;
 var mfinal;
 var livescounter;
@@ -30,7 +32,7 @@ var livescrop;
 var vidas1;
 var vidas2;
 var contador = 0;
-var pegado=false
+var pegado=false;
 
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
@@ -77,7 +79,8 @@ preload.prototype = {
         game.load.image('bg-moon', 'assets/environment/bg-moon.png');
         game.load.image("bg-mountains", 'assets/environment/bg-mountains.png');
         game.load.image("bg-graveyard", 'assets/environment/bg-graveyard.png');
-        game.load.image('vidas','assets/heart.png')
+        game.load.image('vidas','assets/heart.png');
+        game.load.text('highscore');
         // tileset
         game.load.image('tileset', 'assets/environment/tileset.png');
         game.load.tilemap('map', 'assets/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
@@ -339,7 +342,11 @@ playGame.prototype = {
     },
 	
     createPlayer: function (x, y) {
+        highscore = 0;
         var temp = new Player(game, x, y);
+        Highscorecounter = game.add.text(300,10,highscore);
+        Highscorecounter.addColor('#ffff00',0);
+        Highscorecounter.fixedToCamera = true;
         livescounter = game.add.image(20, 10, 'vidas');
         vidas1 = game.add.image(40, 10, 'vidas');
         vidas2 = game.add.image(60, 10, 'vidas');
@@ -421,8 +428,7 @@ playGame.prototype = {
        
         this.parallaxBackground();
 		 game.physics.arcade.collide(enemies_group, this.layer_collisions);
-		 
-		 
+
         if (player.alive) {
             //physics
             game.physics.arcade.collide(player, this.layer_collisions);
@@ -460,6 +466,8 @@ playGame.prototype = {
         player.body.velocity.y = -150;
         contador++;
         vidas--;
+        highscore = highscore - 500;
+        Highscorecounter.setText(highscore);
         console.log(contador)
         player.damage(1);
         player.body.velocity.x = (player.scale.x == 1) ? -100 : 100;
@@ -490,6 +498,9 @@ playGame.prototype = {
     triggerAttack: function (player, enemy) {
         if (this.wasd.attack.isDown && !jumpingFlag) {
             enemy.kill();
+            highscore = highscore + 100;
+            Highscorecounter.setText(highscore);
+            console.log(highscore)
             var death = new EnemyDeath(game, enemy.x, enemy.y - 16);
             game.add.existing(death);
 			this.audioKill.play();
