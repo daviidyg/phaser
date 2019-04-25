@@ -352,6 +352,7 @@ playGame.prototype = {
         vidas2 = game.add.image(60, 10, 'vidas');
         livescounter.fixedToCamera = true;
         vidas1.fixedToCamera = true;
+        
         vidas2.fixedToCamera = true;
         game.add.existing(temp);
     },
@@ -496,7 +497,7 @@ playGame.prototype = {
 	
    
     triggerAttack: function (player, enemy) {
-        if (this.wasd.attack.isDown && !jumpingFlag) {
+        if (this.wasd.attack.isDown) {
             enemy.kill();
             highscore = highscore + 100;
             Highscorecounter.setText(highscore);
@@ -587,7 +588,7 @@ playGame.prototype = {
 		
 		
         // attack
-        if (this.wasd.attack.isDown && player.body.onFloor()) {
+        if (this.wasd.attack.isDown) {
             player.body.velocity.x = 0;
             player.animations.play('attack');
             attackingflag = true;
