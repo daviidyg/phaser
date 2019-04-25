@@ -127,7 +127,7 @@ titleScreen.prototype = {
         var startKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
         startKey.onDown.add(this.startGame, this);
         minicio = game.add.audio('minicio');
-        minicio.volume = 0.7;
+        minicio.volume = 0.5;
         minicio.loop = true;
         minicio.play()
         this.state = 1;
@@ -325,7 +325,7 @@ playGame.prototype = {
     bindKeys: function () {
         this.wasd = {
             jump: game.input.keyboard.addKey(Phaser.Keyboard.UP),
-			jump2: game.input.keyboard.addKey(Phaser.Keyboard.K),
+            jump2: game.input.keyboard.addKey(Phaser.Keyboard.K),
 			attack: game.input.keyboard.addKey(Phaser.Keyboard.X),
             left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
             right: game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
@@ -545,7 +545,16 @@ playGame.prototype = {
 		
 		if(jumpingFlag){
 			if(player.body.velocity.y > 10){
-			 player.animations.play('fall');	
+             player.animations.play('fall');
+             if (this.wasd.left.isDown) {
+	            player.body.velocity.x = -vel;
+	            player.animations.play('run');
+	            player.scale.x = -1;
+	        } else if (this.wasd.right.isDown) {
+	            player.body.velocity.x = vel;
+	            player.animations.play('run');
+	            player.scale.x = 1;
+	        }	
 			}
 		}else{
 	        if (this.wasd.left.isDown) {
@@ -557,8 +566,8 @@ playGame.prototype = {
 	            player.animations.play('run');
 	            player.scale.x = 1;
 	        } else {
-	            player.body.velocity.x = 0;
-				
+	            
+				player.body.velocity.x = 0;
 	            if (this.wasd.crouch.isDown) {	                
 	                    player.animations.play('crouch');
 	                }else{
