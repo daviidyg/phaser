@@ -33,6 +33,7 @@ var vidas1;
 var vidas2;
 var contador = 0;
 var pegado=false;
+var invent=false;
 
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
@@ -84,6 +85,7 @@ preload.prototype = {
         // tileset
         game.load.image('tileset', 'assets/environment/tileset.png');
         game.load.tilemap('map', 'assets/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.tilemap('boss','assets/maps/boss.json');
 		game.load.image('objects', 'assets/environment/objects.png');
         // atlas sprite
         game.load.atlasJSONArray('atlas', 'assets/atlas/atlas.png', 'assets/atlas/atlas.json');
@@ -212,7 +214,9 @@ gameOver.prototype = {
 }
 function inven(){
     var pegado=false;
-    var hurtFlag=false;
+    hurtFlag=false;
+    
+    
 }
 var playGame = function (game) {
 };
@@ -352,6 +356,7 @@ playGame.prototype = {
         vidas2 = game.add.image(60, 10, 'vidas');
         livescounter.fixedToCamera = true;
         vidas1.fixedToCamera = true;
+        attackingflag=false
         
         vidas2.fixedToCamera = true;
         game.add.existing(temp);
@@ -461,7 +466,10 @@ playGame.prototype = {
             return;
         }
         if(!pegado){
+            console.log("antes "+attackingflag)
         pegado=true;
+        attackingflag=false
+        console.log("despues "+attackingflag)
         hurtFlag = true;
         player.animations.play('hurt');
         player.body.velocity.y = -150;
@@ -491,7 +499,7 @@ playGame.prototype = {
         // reset hurt when touching ground
             hurtFlag = false;
             pegado = false
-        
+                    
     },
 	
 	
