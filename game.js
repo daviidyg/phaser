@@ -296,10 +296,11 @@ playGame.prototype = {
 		// ghosts
 		this.addHellGhost(111,7);
 		this.addHellGhost(173,6);
-		this.addHellGhost(220,7);
+		this.addHellGhost(220,5);
         this.addHellGhost(263,7);
+        this.addHellGhost(274,7.5);
         this.addHellGhost(279,8);
-		this.addHellGhost(285,7);
+		this.addHellGhost(284,10);
 		
 
 	},
@@ -618,7 +619,7 @@ playGame.prototype = {
 // player entity
 
 Player = function(game, x, y){
-	x *= 16;
+	x *= 400;
 	y *= 16;
 	this.initX = x;
 	this.initY = y;
