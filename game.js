@@ -270,8 +270,6 @@ playGame.prototype = {
 		// skeletons
 		this.addSkeletonSpawner(17,12, true);
         this.addSkeletonSpawner(10,12, false);
-        this.addSkeletonSpawner(11,12, true);
-        this.addSkeletonSpawner(12,12, true);
         this.addSkeletonSpawner(14,12, true);
         this.addSkeletonSpawner(16,20, false);
         this.addSkeletonSpawner(10,12, false);
@@ -286,21 +284,26 @@ playGame.prototype = {
 		this.addSkeletonSpawner(254,12, true);
         this.addSkeletonSpawner(270,12, false);
         this.addSkeletonSpawner(279,10, true);
+        this.addSkeletonSpawner(295,10, true);
+        this.addSkeletonSpawner(287,10, true);
 		
 		// gatos
 		this.addHellGato(53,11);
 		this.addHellGato(86,11);
 		this.addHellGato(147,11);
-		this.addHellGato(201,11);
+        this.addHellGato(201,11);
+
 		
-		// ghosts
+        // ghosts
+        this.addHellGhost(56,1);
 		this.addHellGhost(111,7);
 		this.addHellGhost(173,6);
 		this.addHellGhost(220,5);
         this.addHellGhost(263,7);
         this.addHellGhost(274,7.5);
         this.addHellGhost(279,8);
-		this.addHellGhost(284,10);
+        this.addHellGhost(284,10);
+        this.addHellGhost(295,8);
 		
 
 	},
@@ -619,7 +622,7 @@ playGame.prototype = {
 // player entity
 
 Player = function(game, x, y){
-	x *= 16;
+	x *= 600;
 	y *= 16;
 	this.initX = x;
 	this.initY = y;
