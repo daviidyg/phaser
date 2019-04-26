@@ -618,7 +618,7 @@ playGame.prototype = {
 // player entity
 
 Player = function(game, x, y){
-	x *= 600;
+	x *= 16;
 	y *= 16;
 	this.initX = x;
 	this.initY = y;
