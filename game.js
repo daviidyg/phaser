@@ -94,6 +94,8 @@ preload.prototype = {
         game.load.atlasJSONArray('atlas', 'assets/atlas/atlas.png', 'assets/atlas/atlas.json');
         game.load.atlasJSONArray('atlas-props', 'assets/atlas/atlas-props.png', 'assets/atlas/atlas-props.json');
         game.load.spritesheet('boss','assets/boss/demon-idle.gif')
+        game.load.spritesheet('bossidle','assets/boss/demon-idle.png')
+
         // audio
         game.load.audio('music', ['assets/sounds/Never-Surrender_loop.ogg']);
        	game.load.audio('attack', ['assets/sounds/attack.ogg']);
@@ -271,17 +273,19 @@ playGame.prototype = {
         player.addChild(hitbox);
 		hitbox.x = 39;
     },
-	
+	crearboss: function(){
+        addBoss(365,5)
+    },
 	populate: function(){
+        
         //enemies group
         enemies_group = game.add.group();
         enemies_group.enableBody = true;
-		
+		setTimeout(() => {
+            this.addBoss(365, 5)
+        }, 20000);
 		// skeletons
 		this.addSkeletonSpawner(17,12, true);
-        this.addSkeletonSpawner(10,12, false);
-        this.addSkeletonSpawner(14,12, true);
-        this.addSkeletonSpawner(16,20, false);
         this.addSkeletonSpawner(10,12, false);
 		this.addSkeletonSpawner(80,12, false);
 		this.addSkeletonSpawner(147,12, false);
@@ -302,7 +306,6 @@ playGame.prototype = {
 		this.addHellGato(86,11);
 		this.addHellGato(147,11);
         this.addHellGato(201,11);
-        this.addBoss(365, 2);
 		
         // ghosts
         this.addHellGhost(56,1);
@@ -314,7 +317,7 @@ playGame.prototype = {
         this.addHellGhost(279,8);
         this.addHellGhost(284,10);
         this.addHellGhost(295,8);
-		
+
 
 	},
 	addBoss: function(x,y){
@@ -713,7 +716,7 @@ Boss = function(game, x, y){
     game.physics.arcade.enable(this);
     this.anchor.setTo(0.5);
     this.body.setSize(100, 110, 0, 0);
-    this.animations.add('idle',Phaser.Animation.generateFrameNames('boss',0,1,2,3,4,5))
+    this.animations.add('idle',Phaser.Animation.generateFrameNames('bossidle',0,1,2,3,4,5))
 };
 Boss.prototype = Object.create(Phaser.Sprite.prototype);
 Boss.prototype.constructor = Boss;
@@ -761,7 +764,7 @@ HellGato.prototype.update = function () {
 
 
 Ghost = function (game, x, y) {
-    this.health = 5;
+    this.health = 1;
     x *= 16;
     y *= 16;
 	this.xDir = -1;
