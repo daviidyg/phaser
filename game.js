@@ -460,7 +460,7 @@ playGame.prototype = {
 		
 		this.movePlayer();		
 		// if end is reached display game over screen
-		if(player.position.x = 292 * 16  && !hapasao){
+		if(player.position.x > 292 * 16  && !hapasao){
            console.log()
            hapasao=true;
             player.position.x=365 * 16
