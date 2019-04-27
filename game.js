@@ -34,7 +34,7 @@ var vidas2;
 var contador = 0;
 var pegado=false;
 var invent=false;
-
+var hapasao=false;
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
     game.state.add('Boot', boot);
@@ -85,7 +85,7 @@ preload.prototype = {
         // tileset
         game.load.image('tileset', 'assets/environment/tileset.png');
         game.load.tilemap('map', 'assets/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('boss','assets/maps/boss.json');
+        game.load.tilemap('boss','assets/maps/aa.json');
 		game.load.image('objects', 'assets/environment/objects.png');
         // atlas sprite
         game.load.atlasJSONArray('atlas', 'assets/atlas/atlas.png', 'assets/atlas/atlas.json');
@@ -394,22 +394,27 @@ playGame.prototype = {
     createTileMap: function () {
         // tiles
         globalMap = game.add.tilemap('map');
+        boss = game.add.tilemap('boss');
         globalMap.addTilesetImage('tileset');
-		  globalMap.addTilesetImage('objects');
+          globalMap.addTilesetImage('objects');
+          boss.addTilesetImage('tileset');
+		  boss.addTilesetImage('objects');
         //
         this.layer_back = globalMap.createLayer('Back Layer');
+
         this.layer_back.resizeWorld();
-		//
+        //
+        this.layer = boss.createLayer('Main Layer');
         this.layer = globalMap.createLayer('Main Layer');
-        this.layer.resizeWorld();
 		//
         
-		//
+        //
+        this.layer_collisions = boss.createLayer('Collisions Layer');
         this.layer_collisions = globalMap.createLayer("Collisions Layer");
-        this.layer_collisions.resizeWorld();
 
 
         // collisions
+        boss.setCollision([2])
         globalMap.setCollision([1]);
         this.layer_collisions.visible = false;
         this.layer_collisions.debug = false;
@@ -455,9 +460,11 @@ playGame.prototype = {
 		
 		this.movePlayer();		
 		// if end is reached display game over screen
-		if(player.position.x >  295 * 16 ){
-            this.game.state.start('GameOver');
-		}
+		if(player.position.x = 292 * 16  && !hapasao){
+           console.log()
+           hapasao=true;
+            player.position.x=365 * 16
+		} 
 		
 		
 
@@ -622,7 +629,7 @@ playGame.prototype = {
 // player entity
 
 Player = function(game, x, y){
-	x *= 16;
+	x *= 795;
 	y *= 16;
 	this.initX = x;
 	this.initY = y;
