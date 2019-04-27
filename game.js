@@ -567,7 +567,7 @@ playGame.prototype = {
             console.log("despues "+enemy.health)
             encolision=true;
             if(enemy.health==0){
-                if(vidasboss=4){
+                if(vidasboss==4){
                     setTimeout(() => {
                         this.game.state.start('GameOver');
                         vidasboss=0;
