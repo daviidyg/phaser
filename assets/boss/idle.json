@@ -1,0 +1,251 @@
+{
+	"textures": [
+		{
+			"image": "attack.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 2640,
+				"h": 192
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "demon-attack-0.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-1.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 240,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-2.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 480,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-3.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 720,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-4.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 960,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-5.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 1200,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-6.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 1440,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-7.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 1680,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-8.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 1920,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-9.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 2160,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				},
+				{
+					"filename": "demon-attack-10.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 240,
+						"h": 192
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					},
+					"frame": {
+						"x": 2400,
+						"y": 0,
+						"w": 240,
+						"h": 192
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:64d97fa1eecc9ae9d12c0fc5c79e883c:a4591583c67db010982c9ac8838375cf:4d86deaafccfa90ed9f73cbbc79e025c$"
+	}
+}

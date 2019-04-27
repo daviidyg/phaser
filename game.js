@@ -7,6 +7,7 @@
 
 var game;
 var player;
+var eboss;
 var folkIndex = 0;
 var gameWidth = 384;
 var gameHeight = 224;
@@ -39,6 +40,7 @@ var mboss;
 var finalboss;
 var finalbattle;
 var encolision=false;
+var vidasboss=0;
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
     game.state.add('Boot', boot);
@@ -65,7 +67,6 @@ boot.prototype = {
         this.game.state.start('Preload');
     }
 }
-
 var preload = function (game) {
 };
 
@@ -93,9 +94,15 @@ preload.prototype = {
         // atlas sprite
         game.load.atlasJSONArray('atlas', 'assets/atlas/atlas.png', 'assets/atlas/atlas.json');
         game.load.atlasJSONArray('atlas-props', 'assets/atlas/atlas-props.png', 'assets/atlas/atlas-props.json');
-        game.load.spritesheet('boss','assets/boss/demon-idle.gif')
-        game.load.spritesheet('bossidle','assets/boss/demon-idle.png')
-
+        game.load.spritesheet('boss','assets/boss/idle.png',160,144,6)
+        game.load.spritesheet('bossattack','assets/boss/attack.png',240,192,11)
+        game.load.atlasJSONArray('idle','assets/boss/idle.png','assets/boss/idle.json')
+        game.load.image('bossidle0','assets/boss/boss0.png')
+        game.load.image('bossidle1','assets/boss/boss1.png')
+        game.load.image('bossidle2','assets/boss/boss2.png')
+        game.load.image('bossidle3','assets/boss/boss3.png')
+        game.load.image('bossidle4','assets/boss/boss4.png')
+        game.load.image('bossidle5','assets/boss/boss5.png')
         // audio
         game.load.audio('music', ['assets/sounds/Never-Surrender_loop.ogg']);
        	game.load.audio('attack', ['assets/sounds/attack.ogg']);
@@ -111,6 +118,19 @@ preload.prototype = {
     create: function () {
         //this.game.state.start('PlayGame');
         this.game.state.start('TitleScreen');
+        /* this.anims.create({
+            key:'bossidle',
+            frames: [
+                {key:'boss0'},
+                {key:'boss1'},
+                {key:'boss2'},
+                {key:'boss3'},
+                {key:'boss4'},
+                {key:'boss5'},
+            ],
+            frameRate:10,
+            repeat: 1
+        }); */
     }
 }
 
@@ -249,7 +269,6 @@ playGame.prototype = {
 		this.startAudios();
 
     },
-	
 	startAudios: function(){
         // audios
          this.audioKill = game.add.audio("kill");
@@ -273,17 +292,16 @@ playGame.prototype = {
         player.addChild(hitbox);
 		hitbox.x = 39;
     },
-	crearboss: function(){
-        addBoss(365,5)
-    },
 	populate: function(){
         
         //enemies group
         enemies_group = game.add.group();
         enemies_group.enableBody = true;
-		setTimeout(() => {
-            this.addBoss(365, 5)
-        }, 20000);
+		/* setTimeout(() => {
+            this.addBoss(378, 2)
+            console.log("boss")
+            game.debug.body(this)
+        }, 20000); */
 		// skeletons
 		this.addSkeletonSpawner(17,12, true);
         this.addSkeletonSpawner(10,12, false);
@@ -306,7 +324,8 @@ playGame.prototype = {
 		this.addHellGato(86,11);
 		this.addHellGato(147,11);
         this.addHellGato(201,11);
-		
+        this.addBoss(378, 2)
+
         // ghosts
         this.addHellGhost(56,1);
 		this.addHellGhost(111,7);
@@ -542,11 +561,18 @@ playGame.prototype = {
    
     triggerAttack: function (player, enemy) {
         if (this.wasd.attack.isDown && !encolision) {
+            console.log(vidasboss)
             console.log("antes "+enemy.health)
             enemy.damage(1);
             console.log("despues "+enemy.health)
             encolision=true;
             if(enemy.health==0){
+                if(vidasboss=4){
+                    setTimeout(() => {
+                        this.game.state.start('GameOver');
+                        vidasboss=0;
+                    }, 3000);
+                }
                 highscore = highscore + 100;
             Highscorecounter.setText(highscore);
             console.log(highscore)
@@ -555,8 +581,9 @@ playGame.prototype = {
                 this.audioKill.play();
             }
             else{
+                vidasboss++;
                 this.audioKill.play();
-
+               
             }
             setTimeout(dano,1000);
             
@@ -566,7 +593,7 @@ playGame.prototype = {
 	
 	
     debugGame: function () {
-        //game.debug.body(enemies_group);
+       // game.debug.body(enemies_group);
         game.debug.body(player);
 		game.debug.body(hitbox);
 		enemies_group.forEachAlive(this.renderGroup, this);    
@@ -704,6 +731,7 @@ Player.prototype.update = function () {
 
 // enemies
 Boss = function(game, x, y){
+    game.debug.body('boss');
     this.health = 5;
     x *= 16;
     y *= 16;
@@ -711,16 +739,58 @@ Boss = function(game, x, y){
     this.speed = 90;
     this.turnTimerTrigger =200;
     this.turnTimer = this.turnTimerTrigger;
-    Phaser.Sprite.call(this, game, x, y, 'boss');
-    sprite = game.add.sprite(100,125,'boss')
+    //var bsprite = game.add.sprite(x,y,'boss');
+    Phaser.Sprite.call(this, game, x, y,'boss');
+    this.animations.add('idle',[0,1,2,3,4,5],10,true);
+    this.animations.play('idle')
+    setInterval(() => {
+        this.loadTexture('bossattack')
+        this.animations.add('attack',[0,1,2,3,4,5,6,7,8,9,10],10,false);
+        this.animations.play('attack')
+        setTimeout(() => {
+            this.loadTexture('boss')
+        this.animations.add('idle',[0,1,2,3,4,5],10,true);
+        this.animations.play('idle')
+        }, 1000);
+    }, 5000);
+    /* setInterval(() => {
+        this.loadTexture('bossattack')
+        this.animations.add('attack',[0,1,2,3,4,5,6,7,8,9,10],10,false);
+        this.animations.play('attack')
+        setInterval(() => {
+        this.loadTexture('boss')
+        this.animations.play('idle')
+        }, 1000);
+
+    }, 5000); */
     game.physics.arcade.enable(this);
     this.anchor.setTo(0.5);
-    this.body.setSize(100, 110, 0, 0);
-    this.animations.add('idle',Phaser.Animation.generateFrameNames('bossidle',0,1,2,3,4,5))
+    this.body.setSize(80, 100, 23, 28);//23, 28;
+    //this.animations.add('idle',Phaser.Animation.generateFrameNames('demon-idle-',0 ,5),6, true);
+    //this.animations.play('idle');
 };
 Boss.prototype = Object.create(Phaser.Sprite.prototype);
 Boss.prototype.constructor = Boss;
+Boss.prototype.update = function () {
+	
+	this.body.velocity.x = this.speed * this.xDir;
+	
+    if (this.body.velocity.x < 0) {
+        this.scale.x = 1;
+    } else {
+        this.scale.x = -1;
+    }
+	
+	// turn around
+	if(this.turnTimer <= 0){
+		this.turnTimer = this.turnTimerTrigger ;
+		this.xDir *= -1;
+	}else{
+		this.turnTimer -= 1;
+	}
 
+    
+};
 HellGato = function (game, x, y) {
     this.health = 1;
     x *= 16;
