@@ -35,6 +35,10 @@ var contador = 0;
 var pegado=false;
 var invent=false;
 var hapasao=false;
+var mboss;
+var finalboss;
+var finalbattle;
+var encolision=false;
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
     game.state.add('Boot', boot);
@@ -85,11 +89,11 @@ preload.prototype = {
         // tileset
         game.load.image('tileset', 'assets/environment/tileset.png');
         game.load.tilemap('map', 'assets/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.tilemap('boss','assets/maps/aa.json');
 		game.load.image('objects', 'assets/environment/objects.png');
         // atlas sprite
         game.load.atlasJSONArray('atlas', 'assets/atlas/atlas.png', 'assets/atlas/atlas.json');
         game.load.atlasJSONArray('atlas-props', 'assets/atlas/atlas-props.png', 'assets/atlas/atlas-props.json');
+        game.load.spritesheet('boss','assets/boss/demon-idle.gif')
         // audio
         game.load.audio('music', ['assets/sounds/Never-Surrender_loop.ogg']);
        	game.load.audio('attack', ['assets/sounds/attack.ogg']);
@@ -99,7 +103,8 @@ preload.prototype = {
         game.load.audio('jump', ['assets/sounds/jump.ogg']);
         game.load.audio('minicio',['assets/sounds/Ruined_loop.ogg']);
         game.load.audio('mfinal',['assets/sounds/Horror-MusicBox_loop.ogg']);
-        
+        game.load.audio('mboss',['assets/sounds/Battle-Furious-SYNTH_loop.ogg']);
+        game.sound.volume = 0.3
     },
     create: function () {
         //this.game.state.start('PlayGame');
@@ -129,7 +134,7 @@ titleScreen.prototype = {
         var startKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
         startKey.onDown.add(this.startGame, this);
         minicio = game.add.audio('minicio');
-        minicio.volume = 0.5;
+        minicio.volume = 0.3;
         minicio.loop = true;
         minicio.play()
         this.state = 1;
@@ -161,7 +166,11 @@ var gameOver = function (game) {
 };
 gameOver.prototype = {
     create: function () {
-		music.stop();
+        music.stop();
+        if(hapasao && !finalboss){
+            mboss.stop();
+            finalbattle=false;
+        }
         bg_moon = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-moon');
         bg_mountains = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-mountains');
         
@@ -182,6 +191,7 @@ gameOver.prototype = {
         mfinal.volume = 0.7;
         mfinal.loop = true;
         mfinal.play()
+        hapasao=false;
     },
 
     blinkText: function () {
@@ -248,7 +258,7 @@ playGame.prototype = {
         // music
         music = game.add.audio('music');
         music.loop = true;
-        music.volume =0.7;
+        music.volume =0.2;
         music.play()
 	},
 	
@@ -292,7 +302,7 @@ playGame.prototype = {
 		this.addHellGato(86,11);
 		this.addHellGato(147,11);
         this.addHellGato(201,11);
-
+        this.addBoss(365, 2);
 		
         // ghosts
         this.addHellGhost(56,1);
@@ -307,7 +317,11 @@ playGame.prototype = {
 		
 
 	},
-	
+	addBoss: function(x,y){
+        var temp = new Boss(game,x, y);
+        game.add.existing(temp);
+        enemies_group.add(temp);
+    },
     addHellGato: function(x,y){
         var temp = new HellGato(game, x, y);
         game.add.existing(temp);
@@ -394,27 +408,21 @@ playGame.prototype = {
     createTileMap: function () {
         // tiles
         globalMap = game.add.tilemap('map');
-        boss = game.add.tilemap('boss');
         globalMap.addTilesetImage('tileset');
           globalMap.addTilesetImage('objects');
-          boss.addTilesetImage('tileset');
-		  boss.addTilesetImage('objects');
         //
         this.layer_back = globalMap.createLayer('Back Layer');
 
         this.layer_back.resizeWorld();
         //
-        this.layer = boss.createLayer('Main Layer');
         this.layer = globalMap.createLayer('Main Layer');
 		//
         
         //
-        this.layer_collisions = boss.createLayer('Collisions Layer');
         this.layer_collisions = globalMap.createLayer("Collisions Layer");
 
 
         // collisions
-        boss.setCollision([2])
         globalMap.setCollision([1]);
         this.layer_collisions.visible = false;
         this.layer_collisions.debug = false;
@@ -460,11 +468,23 @@ playGame.prototype = {
 		
 		this.movePlayer();		
 		// if end is reached display game over screen
-		if(player.position.x > 292 * 16  && !hapasao){
+		if(player.position.x > 307 * 16  && !hapasao){
            console.log()
            hapasao=true;
-            player.position.x=365 * 16
-		} 
+           finalboss=true;
+            music.stop()
+        } 
+        if(player.position.x > 352 * 16 && finalboss){
+            mboss = game.add.audio('mboss');
+            mboss.volume = 0.3;
+            mboss.loop = true;
+            mboss.play()
+            finalboss=false;
+            finalbattle=true
+                }
+        if(player.position.x<353 * 16 && finalbattle){
+            player.position.x = 353 * 16;
+        }
 		
 		
 
@@ -518,14 +538,25 @@ playGame.prototype = {
 	
    
     triggerAttack: function (player, enemy) {
-        if (this.wasd.attack.isDown) {
-            enemy.kill();
-            highscore = highscore + 100;
+        if (this.wasd.attack.isDown && !encolision) {
+            console.log("antes "+enemy.health)
+            enemy.damage(1);
+            console.log("despues "+enemy.health)
+            encolision=true;
+            if(enemy.health==0){
+                highscore = highscore + 100;
             Highscorecounter.setText(highscore);
             console.log(highscore)
-            var death = new EnemyDeath(game, enemy.x, enemy.y - 16);
-            game.add.existing(death);
-			this.audioKill.play();
+                var death = new EnemyDeath(game, enemy.x, enemy.y - 16);
+                game.add.existing(death);
+                this.audioKill.play();
+            }
+            else{
+                this.audioKill.play();
+
+            }
+            setTimeout(dano,1000);
+            
         }
 
     },
@@ -629,7 +660,7 @@ playGame.prototype = {
 // player entity
 
 Player = function(game, x, y){
-	x *= 795;
+	x *= 16; //720 final del juego, 950 zona boss
 	y *= 16;
 	this.initX = x;
 	this.initY = y;
@@ -669,8 +700,26 @@ Player.prototype.update = function () {
 }
 
 // enemies
+Boss = function(game, x, y){
+    this.health = 5;
+    x *= 16;
+    y *= 16;
+    this.xDir= -1;
+    this.speed = 90;
+    this.turnTimerTrigger =200;
+    this.turnTimer = this.turnTimerTrigger;
+    Phaser.Sprite.call(this, game, x, y, 'boss');
+    sprite = game.add.sprite(100,125,'boss')
+    game.physics.arcade.enable(this);
+    this.anchor.setTo(0.5);
+    this.body.setSize(100, 110, 0, 0);
+    this.animations.add('idle',Phaser.Animation.generateFrameNames('boss',0,1,2,3,4,5))
+};
+Boss.prototype = Object.create(Phaser.Sprite.prototype);
+Boss.prototype.constructor = Boss;
 
 HellGato = function (game, x, y) {
+    this.health = 1;
     x *= 16;
     y *= 16;
 	this.xDir = -1;
@@ -712,6 +761,7 @@ HellGato.prototype.update = function () {
 
 
 Ghost = function (game, x, y) {
+    this.health = 5;
     x *= 16;
     y *= 16;
 	this.xDir = -1;
@@ -791,6 +841,7 @@ SkeletonSpawner.prototype.update = function () {
 
 
 Skeleton = function (game, x, y) {
+    this.health = 1;
     x *= 16;
     y *= 16;
 	this.state = 0;
@@ -839,7 +890,9 @@ Skeleton.prototype.update = function () {
 
 
 // Misc
-
+function dano(){
+    encolision=false;
+}
 EnemyDeath = function (game, x, y) {
     Phaser.Sprite.call(this, game, x, y, 'atlas', 'enemy-death-1');
     this.anchor.setTo(0.5);
