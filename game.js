@@ -41,6 +41,7 @@ var finalboss;
 var finalbattle;
 var encolision=false;
 var vidasboss=0;
+var intervaloboss;
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
     game.state.add('Boot', boot);
@@ -202,7 +203,7 @@ gameOver.prototype = {
         credits.anchor.setTo(0.5);
         this.pressEnter = game.add.image(game.width / 2, game.height - 40, 'enter');
         this.pressEnter.anchor.setTo(0.5);
-
+        clearInterval(intervaloboss)
         game.time.events.loop(700, this.blinkText, this);
 
         var startKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
@@ -743,7 +744,7 @@ Boss = function(game, x, y){
     Phaser.Sprite.call(this, game, x, y,'boss');
     this.animations.add('idle',[0,1,2,3,4,5],10,true);
     this.animations.play('idle')
-    setInterval(() => {
+    intervaloboss=setInterval(() => {
         this.loadTexture('bossattack')
         this.animations.add('attack',[0,1,2,3,4,5,6,7,8,9,10],10,false);
         this.animations.play('attack')
