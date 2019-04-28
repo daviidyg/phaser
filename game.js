@@ -42,6 +42,7 @@ var finalbattle;
 var encolision=false;
 var vidasboss=0;
 var intervaloboss;
+
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
     game.state.add('Boot', boot);
@@ -56,6 +57,7 @@ window.onload = function () {
 var boot = function (game) {
 
 }
+/* Codi base - En aquesta part del codi crea una pantalla de carrega.*/
 boot.prototype = {
     preload: function () {
         this.game.load.image('loading', 'assets/sprites/loading.png');
@@ -72,6 +74,8 @@ var preload = function (game) {
 };
 
 preload.prototype = {
+    /* Codi base - En aquesta part carreguem tots els assets que farem servir en el joc. Hem afegit nous cartells per l'inici del joc, els controls, la pantalla de game over
+    , credits i les instruccions. Hem modificat el tilemap gracies al programa tiled, hem afegit un nou enemic amb dues animacions  i un conjunt de musica royalty free.*/
     preload: function () {
         var loadingBar = this.add.sprite(game.width / 2, game.height / 2, 'loading');
         loadingBar.anchor.setTo(0.5);
@@ -97,13 +101,6 @@ preload.prototype = {
         game.load.atlasJSONArray('atlas-props', 'assets/atlas/atlas-props.png', 'assets/atlas/atlas-props.json');
         game.load.spritesheet('boss','assets/boss/idle.png',160,144,6)
         game.load.spritesheet('bossattack','assets/boss/attack.png',240,192,11)
-        game.load.atlasJSONArray('idle','assets/boss/idle.png','assets/boss/idle.json')
-        game.load.image('bossidle0','assets/boss/boss0.png')
-        game.load.image('bossidle1','assets/boss/boss1.png')
-        game.load.image('bossidle2','assets/boss/boss2.png')
-        game.load.image('bossidle3','assets/boss/boss3.png')
-        game.load.image('bossidle4','assets/boss/boss4.png')
-        game.load.image('bossidle5','assets/boss/boss5.png')
         // audio
         game.load.audio('music', ['assets/sounds/Never-Surrender_loop.ogg']);
        	game.load.audio('attack', ['assets/sounds/attack.ogg']);
@@ -117,21 +114,7 @@ preload.prototype = {
         game.sound.volume = 0.3
     },
     create: function () {
-        //this.game.state.start('PlayGame');
         this.game.state.start('TitleScreen');
-        /* this.anims.create({
-            key:'bossidle',
-            frames: [
-                {key:'boss0'},
-                {key:'boss1'},
-                {key:'boss2'},
-                {key:'boss3'},
-                {key:'boss4'},
-                {key:'boss5'},
-            ],
-            frameRate:10,
-            repeat: 1
-        }); */
     }
 }
 
@@ -141,19 +124,16 @@ var titleScreen = function (game) {
 
 titleScreen.prototype = {
     create: function () {
+        /* En aquesta funcio crearem la pantalla d'inici on carregara els assets necesaris. Una vegada apretin qualsevol tecla començara el joc. */
         bg_moon = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-moon');
 		bg_mountains = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-mountains');
-	 
-
         this.title = game.add.image(gameWidth / 2, 100 , 'title');
         this.title.anchor.setTo(0.5);
         var credits = game.add.image(gameWidth / 2, game.height - 12, 'credits');
         credits.anchor.setTo(0.5);
         this.pressEnter = game.add.image(game.width / 2, game.height - 60, 'enter');
         this.pressEnter.anchor.setTo(0.5);
-
         game.time.events.loop(700, this.blinkText, this);
-
         var startKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
         startKey.onDown.add(this.startGame, this);
         minicio = game.add.audio('minicio');
@@ -164,6 +144,7 @@ titleScreen.prototype = {
     },
 
     blinkText: function () {
+        /* Codi base - Permet que el text de press enter sigui intermitent. */
         if (this.pressEnter.alpha) {
             this.pressEnter.alpha = 0;
         } else {
@@ -175,6 +156,7 @@ titleScreen.prototype = {
     },
     startGame: function () {
         if (this.state == 1) {
+            /* Codi base -  carrega els assets per mostrar els controls i si fan clic a enter començara el joc.*/
             this.state = 2;
             this.title2 = game.add.image(game.width / 2, 40, 'instructions');
             this.title2.anchor.setTo(0.5, 0);
@@ -189,6 +171,9 @@ var gameOver = function (game) {
 };
 gameOver.prototype = {
     create: function () {
+        /* En aquesta funció es reniciaran la majoria de variables que fem servir en el joc com variables booleanes, highscore o vides. A més també es parara música depenent on
+        esta el jugador en aquell moment. Si encara no arribat al boss la variable music parara, si está en el boss mboss ho fara. Un altre cosa que es reniciara sera el interval
+        que fem servir per les animacions del boss. */
         music.stop();
         if(hapasao && !finalboss){
             mboss.stop();
@@ -196,7 +181,7 @@ gameOver.prototype = {
         }
         bg_moon = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-moon');
         bg_mountains = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-mountains');
-        
+        vidasboss=0;
         this.title = game.add.image(gameWidth / 2, 100 , 'game-over');
         this.title.anchor.setTo(0.5);
         var credits = game.add.image(gameWidth / 2, game.height - 12, 'credits');
@@ -205,10 +190,8 @@ gameOver.prototype = {
         this.pressEnter.anchor.setTo(0.5);
         clearInterval(intervaloboss)
         game.time.events.loop(700, this.blinkText, this);
-
         var startKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
         startKey.onDown.add(this.startGame, this);
-
         this.state = 2;
         mfinal = game.add.audio('mfinal');
         mfinal.volume = 0.7;
@@ -246,6 +229,7 @@ gameOver.prototype = {
     }
 }
 function inven(){
+    /* En aquesta funció fem que el jugador tingui invencibilitat durant un segon després de rebre un atac, per tal de que no desconti més d'una vida. */
     var pegado=false;
     hurtFlag=false;
     
@@ -254,7 +238,7 @@ function inven(){
 var playGame = function (game) {
 };
 playGame.prototype = {
-
+    /* codi base - En aquesta part del codi estara la majoria del joc. */
     create: function () {
         minicio.stop();
 		this.createBackgrounds();
@@ -264,7 +248,7 @@ playGame.prototype = {
 		this.createPlayer(6, 9);
 		this.createHitbox();
 		  
-        // camera follow
+        // codi base - La camara seguira al jugador
         game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
 		
 		this.startAudios();
@@ -285,7 +269,7 @@ playGame.prototype = {
 	},
 	
     createHitbox: function () {
-        // create hitbox to detect attacks
+        // codi base - en aquesta funció crea els hitbox i les colisions.
         hitbox = game.add.sprite(0, 16, null);
         hitbox.anchor.setTo(0.5);
         game.physics.arcade.enable(hitbox);
@@ -294,15 +278,10 @@ playGame.prototype = {
 		hitbox.x = 39;
     },
 	populate: function(){
-        
+        /* En aquesta funció crearem els enemics que sortiran en el mapa i els afegirem en un variable que sera un grup. */
         //enemies group
         enemies_group = game.add.group();
         enemies_group.enableBody = true;
-		/* setTimeout(() => {
-            this.addBoss(378, 2)
-            console.log("boss")
-            game.debug.body(this)
-        }, 20000); */
 		// skeletons
 		this.addSkeletonSpawner(17,12, true);
         this.addSkeletonSpawner(10,12, false);
@@ -370,6 +349,7 @@ playGame.prototype = {
     },
 	
     bindKeys: function () {
+        /* codi base - En aquesta part del codi asignem els controls */
         this.wasd = {
             jump: game.input.keyboard.addKey(Phaser.Keyboard.UP),
             jump2: game.input.keyboard.addKey(Phaser.Keyboard.K),
@@ -389,6 +369,7 @@ playGame.prototype = {
     },
 	
     createPlayer: function (x, y) {
+        /* Aqui crearem al jugador, el highscore, les sevas vidas i les imatges de aquestes. */
         highscore = 0;
         var temp = new Player(game, x, y);
         Highscorecounter = game.add.text(300,10,highscore);
@@ -404,7 +385,7 @@ playGame.prototype = {
         vidas2.fixedToCamera = true;
         game.add.existing(temp);
     },
-
+    /* Codi base - A continuació creara el mapa amb les dades del tilemap que ha creat i nosaltres em modificat amb tiled. */
     decorWorld: function () {
         this.addProp(4 * 16, 7 * 16 , 'candle');
        
@@ -471,8 +452,7 @@ playGame.prototype = {
    
 
     update: function () {
-        
-
+        /* Codi base - En aquesta part afegira valors que s'aniran actualitzan a mesura que el joc avança. */
        
         this.parallaxBackground();
 		 game.physics.arcade.collide(enemies_group, this.layer_collisions);
@@ -490,13 +470,14 @@ playGame.prototype = {
         }
 		
 		this.movePlayer();		
-		// if end is reached display game over screen
+		// Si el jugador ha arribat al final del stage parara la musica del stage i asignara true un valor que utilizarem mes andavant.
 		if(player.position.x > 307 * 16  && !hapasao){
            console.log()
            hapasao=true;
            finalboss=true;
             music.stop()
         } 
+        // una vegada el jugador arriba a l'area del boss sonara la seva musica i asignarem true a la variable de finalbattle que utilitzarem en el seguent if.
         if(player.position.x > 352 * 16 && finalboss){
             mboss = game.add.audio('mboss');
             mboss.volume = 0.3;
@@ -505,19 +486,18 @@ playGame.prototype = {
             finalboss=false;
             finalbattle=true
                 }
+                //Finalment farem que el jugador no pugi tornar enrerre. fins i tot podríem esborrar en la funció de GameOver que es posi en false finalbattle per tal de fer un checkpoint.
+                //Hem decidit no fer-ho per tal de aumentar la rejugabilitat.
         if(player.position.x<353 * 16 && finalbattle){
             player.position.x = 353 * 16;
         }
 		
-		
-
-       //this.debugGame();
-
     },
 	
     
 	
     hurtPlayer: function () {
+        /* En aquesta funció descontarem vidas al jugador si ha sigut atacat i l'afegirem un segon de invencibilitat. A més descontarem 500 de la puntació per cada vida perduda.  */
         if (hurtFlag) {
             return;
         }
@@ -540,6 +520,7 @@ playGame.prototype = {
         console.log(vidas)
         setTimeout(this.hurtFlagManager,1000)
     }
+    /* Aqui esborrarem les imatges que simbolitzen les vidas. */
         if(vidas==2){
             vidas2.destroy();
         }
@@ -561,6 +542,8 @@ playGame.prototype = {
 	
    
     triggerAttack: function (player, enemy) {
+        /* En aquesta funció farem que el jugador ataqui i mati enemics. A més com no sabem quin tipus de enemic és eliminarem vida al enemic i si arriba a 0 moriria.
+        El boss te 5 vidas i per cada vida perduda es sumara un contador, si el contador arriba a 4 el joc acabara en 3 segons.  */
         if (this.wasd.attack.isDown && !encolision) {
             console.log(vidasboss)
             console.log("antes "+enemy.health)
@@ -586,6 +569,7 @@ playGame.prototype = {
                 this.audioKill.play();
                
             }
+            /* Els enemics també tenen invencibilitat per evitar matar al boss en un cop. */
             setTimeout(dano,1000);
             
         }
@@ -610,7 +594,7 @@ playGame.prototype = {
     
 
 	movePlayer: function(){
-		
+		/* Codi base - En aquesta funció es creara tot el moviment del jugador. */
         if (hurtFlag) {
             return;
         }
@@ -628,6 +612,7 @@ playGame.prototype = {
 		
 		
 		if(jumpingFlag){
+            /* Em modificat el codi per que pugi atacara al saltar i es pugi moure al saltar */
 			if(player.body.velocity.y > 10){
              player.animations.play('fall');
              if (this.wasd.left.isDown) {
@@ -688,9 +673,10 @@ playGame.prototype = {
 
 }
 
-// player entity
+// Aqui crarem la entitat del jugador.
 
 Player = function(game, x, y){
+    /*  Codi base*/
 	x *= 16; //720 final del juego, 950 zona boss
 	y *= 16;
 	this.initX = x;
@@ -703,7 +689,7 @@ Player = function(game, x, y){
 	this.body.gravity.y = 300;
 	this.kind = "player";
 	player = this;
-    //add animations
+    //animacions jugador
     var animVel = 12;
     this.animations.add('idle', Phaser.Animation.generateFrameNames('hero-idle-', 1, 4, '', 0), animVel - 4, true);
 	this.animations.add('run', Phaser.Animation.generateFrameNames('hero-run-', 1, 6, '', 0), animVel - 4, true);
@@ -720,18 +706,18 @@ Player = function(game, x, y){
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 Player.prototype.update = function () {
-	// kill player if is at spikes level
+	// Codi base - matara el jugador si esta al nivell dels pinxos.
 	if(this.position.y > 172){
 		audioHurt.play();
 		this.game.state.start('GameOver');
 	}
-	//console.log(this.position.y);
 	
 	
 }
 
-// enemies
+// Enemics
 Boss = function(game, x, y){
+    /*  Aquest es el boss i aqui es crea els sprites i les animacions. Tot aixó ho hem creat nosaltes, menys el art que es del mateix artista.*/
     game.debug.body('boss');
     this.health = 5;
     x *= 16;
@@ -744,6 +730,7 @@ Boss = function(game, x, y){
     Phaser.Sprite.call(this, game, x, y,'boss');
     this.animations.add('idle',[0,1,2,3,4,5],10,true);
     this.animations.play('idle')
+    /* En aquest interval el boss anira alterant de sprite i animació. En la animació d'attack la seva hitbox desapareixera i no se li pot fer dany. */
     intervaloboss=setInterval(() => {
         this.loadTexture('bossattack')
         this.animations.add('attack',[0,1,2,3,4,5,6,7,8,9,10],10,false);
@@ -754,26 +741,14 @@ Boss = function(game, x, y){
         this.animations.play('idle')
         }, 1000);
     }, 5000);
-    /* setInterval(() => {
-        this.loadTexture('bossattack')
-        this.animations.add('attack',[0,1,2,3,4,5,6,7,8,9,10],10,false);
-        this.animations.play('attack')
-        setInterval(() => {
-        this.loadTexture('boss')
-        this.animations.play('idle')
-        }, 1000);
-
-    }, 5000); */
     game.physics.arcade.enable(this);
     this.anchor.setTo(0.5);
     this.body.setSize(80, 100, 23, 28);//23, 28;
-    //this.animations.add('idle',Phaser.Animation.generateFrameNames('demon-idle-',0 ,5),6, true);
-    //this.animations.play('idle');
 };
 Boss.prototype = Object.create(Phaser.Sprite.prototype);
 Boss.prototype.constructor = Boss;
 Boss.prototype.update = function () {
-	
+	/* Aixó fara que el boss es vagi movent horitzontalment. */
 	this.body.velocity.x = this.speed * this.xDir;
 	
     if (this.body.velocity.x < 0) {
@@ -793,6 +768,8 @@ Boss.prototype.update = function () {
     
 };
 HellGato = function (game, x, y) {
+        /* codi base */
+
     this.health = 1;
     x *= 16;
     y *= 16;
@@ -822,7 +799,7 @@ HellGato.prototype.update = function () {
         this.scale.x = -1;
     }
 	
-	// turn around
+	// es donara la volta
 	if(this.turnTimer <= 0){
 		this.turnTimer = this.turnTimerTrigger ;
 		this.xDir *= -1;
@@ -835,6 +812,8 @@ HellGato.prototype.update = function () {
 
 
 Ghost = function (game, x, y) {
+        /* codi base */
+
     this.health = 1;
     x *= 16;
     y *= 16;
@@ -859,7 +838,7 @@ Ghost.prototype.constructor = Ghost;
 
 Ghost.prototype.update = function () {
 	
-	// turn to player
+	// mirara al jugador
 	if(this.x > player.x){
 		this.scale.x = -1;
 	}else{
@@ -883,9 +862,10 @@ SkeletonSpawner.prototype.constructor = SkeletonSpawner;
 
 SkeletonSpawner.prototype.update = function () {
 
-	
+	    /* codi base */
+
 	if(this.spawnInfront){
-		// spawn in front
+		// apareixera devant
 		if( player.x  > this.x - 9* 16 ){
 
 	        var temp = new Skeleton(game, this.x / 16, ( this.y / 16) - 34/ 16 );
@@ -896,7 +876,7 @@ SkeletonSpawner.prototype.update = function () {
 		
 		}	
 	}else{
-		// spawn in back
+		// apareixera derrere
 		if( player.x  > this.x + 6 * 16 ){
 		
 	        var temp = new Skeleton(game, this.x / 16, ( this.y / 16) - 34/ 16 );
@@ -915,6 +895,7 @@ SkeletonSpawner.prototype.update = function () {
 
 
 Skeleton = function (game, x, y) {
+    /* codi base */
     this.health = 1;
     x *= 16;
     y *= 16;
@@ -949,7 +930,7 @@ Skeleton.prototype.update = function () {
 	
   
 	
-	// follow player
+	// seguira al jugador 
 	if(this.x > player.x ){
 		this.xDir = -1;	
 		this.scale.x = 1;
@@ -968,6 +949,7 @@ function dano(){
     encolision=false;
 }
 EnemyDeath = function (game, x, y) {
+     /* Codi base - Aqui matara al enemic. */
     Phaser.Sprite.call(this, game, x, y, 'atlas', 'enemy-death-1');
     this.anchor.setTo(0.5);
     var anim = this.animations.add('death', Phaser.Animation.generateFrameNames('enemy-death-', 1, 5, '', 0), 16, false);
