@@ -80,7 +80,7 @@ preload.prototype = {
         game.load.image('title', 'assets/sprites/title-screen.png');
 		game.load.image('game-over', 'assets/sprites/game-over.png');
         game.load.image('enter', 'assets/sprites/press-enter-text.png');
-        game.load.image('credits', 'assets/sprites/credits-text.png');
+        game.load.image('credits', 'assets/sprites/credits-txt.png');
         game.load.image('instructions', 'assets/sprites/instructions.png');
         // environment
         game.load.image('bg-moon', 'assets/environment/bg-moon.png');
