@@ -188,7 +188,7 @@ gameOver.prototype = {
         credits.anchor.setTo(0.5);
         this.pressEnter = game.add.image(game.width / 2, game.height - 40, 'enter');
         this.pressEnter.anchor.setTo(0.5);
-        clearInterval(intervaloboss)
+        clearInterval(intervaloboss);
         game.time.events.loop(700, this.blinkText, this);
         var startKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
         startKey.onDown.add(this.startGame, this);
@@ -196,9 +196,13 @@ gameOver.prototype = {
         mfinal = game.add.audio('mfinal');
         mfinal.volume = 0.7;
         mfinal.loop = true;
-        mfinal.play()
+        mfinal.play();
         hapasao=false;
-    },
+        Highscorecounter = game.add.text(140,160,'Puntuación: '+highscore);
+        Highscorecounter.addColor('#ffff00',0);
+        Highscorecounter.fixedToCamera = true;
+        Highscorecounter.fontSize = 10;
+        },
 
     blinkText: function () {
         if (this.pressEnter.alpha) {
@@ -375,6 +379,7 @@ playGame.prototype = {
         Highscorecounter = game.add.text(300,10,highscore);
         Highscorecounter.addColor('#ffff00',0);
         Highscorecounter.fixedToCamera = true;
+        Highscorecounter.fontSize = 15;
         livescounter = game.add.image(20, 10, 'vidas');
         vidas1 = game.add.image(40, 10, 'vidas');
         vidas2 = game.add.image(60, 10, 'vidas');
