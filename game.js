@@ -42,6 +42,7 @@ var finalbattle;
 var encolision=false;
 var vidasboss=0;
 var intervaloboss;
+var highscoretotal=0;
 
 window.onload = function () {
     game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO, "");
@@ -198,6 +199,13 @@ gameOver.prototype = {
         mfinal.loop = true;
         mfinal.play();
         hapasao=false;
+        if (highscore > highscoretotal || highscoretotal == 0){
+            highscoretotal = highscore;
+            Highscorecounter = game.add.text(120,160,'Récord: '+highscoretotal);
+            Highscorecounter.fontSize = 10;
+            Highscorecounter.addColor('#ffff00',0);
+        }
+        Highscorecounter = game.add.text(120,160,'Récord: '+highscoretotal);
         Highscorecounter = game.add.text(140,160,'Puntuación: '+highscore);
         Highscorecounter.addColor('#ffff00',0);
         Highscorecounter.fixedToCamera = true;
