@@ -771,7 +771,7 @@ Boss = function(game, x, y){
         this.animations.add('idle',[0,1,2,3,4,5],10,true);
         this.animations.play('idle')
         }, 1000);
-    }, 5000);
+    }, 15000);
     game.physics.arcade.enable(this);
     this.anchor.setTo(0.5);
     this.body.setSize(80, 100, 23, 28);//23, 28;
