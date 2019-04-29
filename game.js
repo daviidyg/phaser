@@ -83,6 +83,7 @@ preload.prototype = {
         game.load.setPreloadSprite(loadingBar);
         // load title screen
         game.load.image('title', 'assets/sprites/title-screen.png');
+        game.load.image ('game-over2', 'assets/sprites/game-over2.png')
 		game.load.image('game-over', 'assets/sprites/game-over.png');
         game.load.image('enter', 'assets/sprites/press-enter-text.png');
         game.load.image('credits', 'assets/sprites/credits-txt.png');
@@ -182,8 +183,14 @@ gameOver.prototype = {
         }
         bg_moon = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-moon');
         bg_mountains = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'bg-mountains');
+        if (vidasboss == 4 ){
+            this.title = game.add.image(gameWidth / 2, 100 , 'game-over2');
+
+        }
+        else{
+            this.title = game.add.image(gameWidth / 2, 100 , 'game-over');
+        }
         vidasboss=0;
-        this.title = game.add.image(gameWidth / 2, 100 , 'game-over');
         this.title.anchor.setTo(0.5);
         var credits = game.add.image(gameWidth / 2, game.height - 12, 'credits');
         credits.anchor.setTo(0.5);
@@ -579,7 +586,6 @@ playGame.prototype = {
                 if(vidasboss==4){
                     setTimeout(() => {
                         this.game.state.start('GameOver');
-                        vidasboss=0;
                     }, 3000);
                 }
                 highscore = highscore + 100;
