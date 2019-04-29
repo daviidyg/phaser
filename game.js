@@ -212,7 +212,7 @@ gameOver.prototype = {
 
         }
         else{
-            Highscorecountertotal = game.add.text(120,160,'Récord: '+highscoretotal);
+            Highscorecountertotal = game.add.text(150,20,'Récord: '+highscoretotal);
             Highscorecounter = game.add.text(140,160,'Puntuación: '+highscore);
             Highscorecounter.addColor('#ffff00',0);
             Highscorecounter.fixedToCamera = true;
