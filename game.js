@@ -201,15 +201,27 @@ gameOver.prototype = {
         hapasao=false;
         if (highscore > highscoretotal || highscoretotal == 0){
             highscoretotal = highscore;
-            Highscorecounter = game.add.text(120,160,'Récord: '+highscoretotal);
+            Highscorecountertotal = game.add.text(150,20,'Récord: '+highscoretotal);
+            Highscorecounter = game.add.text(140,160,'Puntuación: '+highscore);
             Highscorecounter.fontSize = 10;
             Highscorecounter.addColor('#ffff00',0);
+            Highscorecounter.fixedToCamera = true;
+            Highscorecountertotal.fontSize = 10;
+            Highscorecountertotal.addColor('#ffff00',0);
+
+
         }
-        Highscorecounter = game.add.text(120,160,'Récord: '+highscoretotal);
-        Highscorecounter = game.add.text(140,160,'Puntuación: '+highscore);
-        Highscorecounter.addColor('#ffff00',0);
-        Highscorecounter.fixedToCamera = true;
-        Highscorecounter.fontSize = 10;
+        else{
+            Highscorecountertotal = game.add.text(120,160,'Récord: '+highscoretotal);
+            Highscorecounter = game.add.text(140,160,'Puntuación: '+highscore);
+            Highscorecounter.addColor('#ffff00',0);
+            Highscorecounter.fixedToCamera = true;
+            Highscorecounter.fontSize = 10;
+            Highscorecountertotal.fontSize = 10;
+            Highscorecountertotal.addColor('#ffff00',0);
+
+        }
+
         },
 
     blinkText: function () {
